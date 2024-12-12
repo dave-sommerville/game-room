@@ -7,6 +7,10 @@ function select(selector, scope = document) {
   return scope.querySelector(selector);
 }
 
+function selectAll(selector, scope = document) {
+  return scope.querySelectorAll(selector);
+}
+
 function listen(event, element, callback) {
   return element.addEventListener(event, callback);
 }
@@ -27,7 +31,7 @@ function getRandomNumber(min, max) {
 
 /*------------------------------------------------------->
 
-<-------------------------------------------------------*/
+<-------------------------------------------------------
 
 const guessCounterDisplay = select('.guess-counter');
 const playerInput = select('.player-input');
@@ -37,7 +41,7 @@ const restartBtn = select('.restart');
 
 /*------------------------------------------------------->
   Number Guesser 
-<-------------------------------------------------------*/
+<-------------------------------------------------------
 
 let guessCounter = 0;
 let compNum = 0;
@@ -134,12 +138,29 @@ function countTokens(arr1, arr2) {
 const { redTokens, whiteTokens } = countTokens(arr1, arr2);
 console.log(redTokens, whiteTokens);
 
+selectAll('.number-selector').forEach(selector => {
+  const display = selector.querySelector('.number-display');
+  const upArrow = selector.querySelector('.arrow.up');
+  const downArrow = selector.querySelector('.arrow.down');
+
+  listen('click', upArrow, () => {
+    let current = parseInt(display.textContent);
+    display.textContent = current === 6 ? 1 : current + 1;
+  });
+
+  listen('click', downArrow, () => {
+    let current = parseInt(display.textContent);
+    display.textContent = current === 1 ? 6 : current - 1;
+  });
+});
+
+
+
 /*------------------------------------------------>
-Master mind 
+Draggable, possibly 8 ball 
 <------------------------------------------------*/
 
-
-const draggable = select('#draggable');
+/*const draggable = select('#draggable');
 
 
 //    Gotta take the functions out, but action is very smooth
@@ -172,4 +193,66 @@ draggable.onmousedown = function(event) {
 draggable.ondragstart = function() {
     return false;
 };
+
+
+/*------------------------------------------------>
+Matching Game 
+<------------------------------------------------
+
+
+const cards = [
+  { id: 1, img: 'img1.png' },
+  { id: 2, img: 'img2.png' },
+  // Add more cards
+];
+
+let firstCard, secondCard;
+let hasFlippedCard = false;
+let lockBoard = false;
+
+function flipCard() {
+  if (lockBoard) return;
+  if (this === firstCard) return;
+
+  this.classList.add('flip');
+
+  if (!hasFlippedCard) {
+    hasFlippedCard = true;
+    firstCard = this;
+    return;
+  }
+
+  secondCard = this;
+  checkForMatch();
+}
+
+function checkForMatch() {
+  let isMatch = firstCard.dataset.id === secondCard.dataset.id;
+  isMatch ? disableCards() : unflipCards();
+}
+
+function disableCards() {
+  firstCard.removeEventListener('click', flipCard);
+  secondCard.removeEventListener('click', flipCard);
+  resetBoard();
+}
+
+function unflipCards() {
+  lockBoard = true;
+  setTimeout(() => {
+    firstCard.classList.remove('flip');
+    secondCard.classList.remove('flip');
+    resetBoard();
+  }, 1500);
+}
+
+function resetBoard() {
+  [hasFlippedCard, lockBoard] = [false, false];
+  [firstCard, secondCard] = [null, null];
+}
+
+cards.forEach(card => card.addEventListener('click', flipCard));
+*/
+
+
 
